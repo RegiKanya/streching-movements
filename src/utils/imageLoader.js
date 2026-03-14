@@ -1,11 +1,15 @@
 const IMAGE_COUNT = 18
+const BASE = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : import.meta.env.BASE_URL + '/'
+
+const BASE_PATH = `${BASE}pictures/`
 
 export function getImages() {
   const images = []
-  const BASE_PATH = import.meta.env.BASE_URL + 'pictures/'
 
-  console.log('BASE_PATH:', BASE_PATH) // debug
-  console.log('BASE_URL:', import.meta.env.BASE_URL) // debug
+  console.log('BASE_URL:', import.meta.env.BASE_URL)
+  console.log('BASE_PATH:', BASE_PATH)
 
   images.push({
     id: 'cover',
@@ -21,7 +25,7 @@ export function getImages() {
     })
   }
 
-  console.log('images:', images) // debug
+  console.log('Összes kép:', images.map(img => img.src))
 
   return images
 }

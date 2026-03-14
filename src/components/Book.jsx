@@ -4,6 +4,7 @@ import { useSwipeable } from 'react-swipeable'
 import Page from './Page'
 import ProgressBar from './ProgressBar'
 import AutoPlayControls from './AutoPlayControls'
+import NavigationArrows from './NavigationArrows'
 import { useAutoPlay } from '../hooks/useAutoPlay'
 
 export default function Book({ images }) {
@@ -13,6 +14,7 @@ export default function Book({ images }) {
     width: typeof window !== 'undefined' ? window.innerWidth : 800,
     height: typeof window !== 'undefined' ? window.innerHeight - 80 : 600,
   })
+  const dragStartX = useRef(0)
   const total = images.length
 
   useEffect(() => {
@@ -55,15 +57,32 @@ export default function Book({ images }) {
     },
     preventScrollOnSwipe: true,
     trackMouse: true,
+    trackTouch: true,
+    delta: 30,
   })
 
-  const handleBookClick = () => {
-    toggle()
+  const handleMouseDown = (e) => {
+    dragStartX.current = e.clientX
+  }
+
+  const handleClick = (e) => {
+    if (e.target.closest('.autoplay-btn')) return
+    if (e.target.closest('.nav-arrow')) return
+
+    const dragDistance = Math.abs(e.clientX - dragStartX.current)
+    if (dragDistance > 10) return
+
+    pause()
+    goNext()
   }
 
   return (
     <div className="book-wrapper" {...swipeHandlers}>
-      <div className="book-container" onClick={handleBookClick}>
+      <div
+        className="book-container"
+        onMouseDown={handleMouseDown}
+        onClick={handleClick}
+      >
         <HTMLFlipBook
           ref={bookRef}
           width={dimensions.width}
@@ -98,6 +117,13 @@ export default function Book({ images }) {
           isPlaying={isPlaying}
           onToggle={toggle}
           isLastPage={currentPage >= total - 1}
+        />
+
+        <NavigationArrows
+          onPrev={() => { pause(); goPrev() }}
+          onNext={() => { pause(); goNext() }}
+          isFirst={currentPage === 0}
+          isLast={currentPage >= total - 1}
         />
       </div>
 

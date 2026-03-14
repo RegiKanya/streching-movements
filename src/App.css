@@ -78,6 +78,44 @@
   color: #4ade80;
 }
 
+/* ── Navigation Arrows ── */
+.nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, opacity 0.3s;
+}
+
+.nav-arrow:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #ffffff;
+}
+
+.nav-arrow-left {
+  left: 16px;
+}
+
+.nav-arrow-right {
+  right: 16px;
+}
+
+.nav-arrow.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* ── Progress Bar ── */
 .progress-container {
   height: 56px;
@@ -115,4 +153,24 @@
   background: linear-gradient(90deg, #4ade80, #22c55e);
   border-radius: 2px;
   transition: width 0.4s ease;
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .nav-arrow {
+    width: 38px;
+    height: 38px;
+  }
+
+  .autoplay-btn {
+    width: 44px;
+    height: 44px;
+    top: 12px;
+    right: 12px;
+  }
+
+  .progress-container {
+    height: 48px;
+    padding: 4px 12px 8px;
+  }
 }
