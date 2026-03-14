@@ -1,0 +1,118 @@
+.app {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #0a0a0a;
+  overflow: hidden;
+}
+
+/* ── Book wrapper ── */
+.book-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.book-container {
+  flex: 1;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+
+.flipbook {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* ── Page & Image ── */
+.page {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #0a0a0a;
+}
+
+.page-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+}
+
+/* ── AutoPlay Button ── */
+.autoplay-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, opacity 0.2s;
+}
+
+.autoplay-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #ffffff;
+}
+
+.autoplay-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.autoplay-btn.playing {
+  border-color: #4ade80;
+  color: #4ade80;
+}
+
+/* ── Progress Bar ── */
+.progress-container {
+  height: 56px;
+  padding: 6px 20px 10px;
+  background: #0a0a0a;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.countdown {
+  font-variant-numeric: tabular-nums;
+  color: #4ade80;
+  font-weight: 600;
+}
+
+.progress-bar-bg {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4ade80, #22c55e);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
