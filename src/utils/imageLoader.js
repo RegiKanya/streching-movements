@@ -1,4 +1,4 @@
-const IMAGE_COUNT = 28 // <- képek száma (cover nélkül)
+const IMAGE_COUNT = 18 // <- képek száma (cover nélkül)
 const BASE_PATH = import.meta.env.BASE_URL + 'pictures/'
 
 export function getImages() {
