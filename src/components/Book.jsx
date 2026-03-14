@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback } from 'react'
+import { useRef, useState, useCallback, useEffect } from 'react'
 import HTMLFlipBook from 'react-pageflip'
 import { useSwipeable } from 'react-swipeable'
 import Page from './Page'
@@ -9,7 +9,22 @@ import { useAutoPlay } from '../hooks/useAutoPlay'
 export default function Book({ images }) {
   const bookRef = useRef(null)
   const [currentPage, setCurrentPage] = useState(0)
+  const [dimensions, setDimensions] = useState({
+    width: typeof window !== 'undefined' ? window.innerWidth : 800,
+    height: typeof window !== 'undefined' ? window.innerHeight - 80 : 600,
+  })
   const total = images.length
+
+  useEffect(() => {
+    function handleResize() {
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight - 80,
+      })
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   const goNext = useCallback(() => {
     bookRef.current?.pageFlip()?.flipNext()
@@ -51,8 +66,8 @@ export default function Book({ images }) {
       <div className="book-container" onClick={handleBookClick}>
         <HTMLFlipBook
           ref={bookRef}
-          width={window.innerWidth}
-          height={window.innerHeight - 80}
+          width={dimensions.width}
+          height={dimensions.height}
           size="stretch"
           minWidth={300}
           maxWidth={1200}
@@ -62,7 +77,7 @@ export default function Book({ images }) {
           flippingTime={600}
           usePortrait={true}
           startPage={0}
-          drawShadow={true}
+          drawShadow={false}
           onFlip={handleFlip}
           className="flipbook"
           style={{}}
