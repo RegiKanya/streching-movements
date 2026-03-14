@@ -1,12 +1,15 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { useSound } from './useSound'
 
 const AUTOPLAY_SECONDS = 30
+const TICK_THRESHOLD = 5 // utolsó 5 mp-ben hangjelzés
 
 export function useAutoPlay(onNext, totalPages, currentPage) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [secondsLeft, setSecondsLeft] = useState(AUTOPLAY_SECONDS)
   const intervalRef = useRef(null)
   const timerRef = useRef(null)
+  const { playTick } = useSound()
 
   const clearAll = useCallback(() => {
     clearInterval(intervalRef.current)
@@ -33,21 +36,25 @@ export function useAutoPlay(onNext, totalPages, currentPage) {
     }
   }, [isPlaying, pause, play])
 
-  // Countdown timer
+  // Countdown timer + hang effekt
   useEffect(() => {
     if (!isPlaying) return
 
     timerRef.current = setInterval(() => {
       setSecondsLeft(prev => {
-        if (prev <= 1) {
-          return AUTOPLAY_SECONDS
+        const next = prev <= 1 ? AUTOPLAY_SECONDS : prev - 1
+
+        // Hang az utolsó 5 mp-ben
+        if (prev <= TICK_THRESHOLD && prev > 1) {
+          playTick()
         }
-        return prev - 1
+
+        return next
       })
     }, 1000)
 
     return () => clearInterval(timerRef.current)
-  }, [isPlaying])
+  }, [isPlaying, playTick])
 
   // Page advance
   useEffect(() => {
@@ -64,7 +71,7 @@ export function useAutoPlay(onNext, totalPages, currentPage) {
     return () => clearInterval(intervalRef.current)
   }, [isPlaying, currentPage, totalPages, onNext, pause])
 
-  // Auto-pause on last page
+  // Auto-pause az utolsó oldalon
   useEffect(() => {
     if (currentPage >= totalPages - 1 && isPlaying) {
       pause()

@@ -1,39 +1,21 @@
-import { useRef, useState, useCallback, useEffect } from 'react'
-import HTMLFlipBook from 'react-pageflip'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { useSwipeable } from 'react-swipeable'
-import Page from './Page'
 import ProgressBar from './ProgressBar'
 import AutoPlayControls from './AutoPlayControls'
 import NavigationArrows from './NavigationArrows'
 import { useAutoPlay } from '../hooks/useAutoPlay'
 
 export default function Book({ images }) {
-  const bookRef = useRef(null)
   const [currentPage, setCurrentPage] = useState(0)
-  const [dimensions, setDimensions] = useState({
-    width: typeof window !== 'undefined' ? window.innerWidth : 800,
-    height: typeof window !== 'undefined' ? window.innerHeight - 80 : 600,
-  })
   const dragStartX = useRef(0)
   const total = images.length
 
-  useEffect(() => {
-    function handleResize() {
-      setDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight - 80,
-      })
-    }
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
-
   const goNext = useCallback(() => {
-    bookRef.current?.pageFlip()?.flipNext()
-  }, [])
+    setCurrentPage(prev => (prev >= total - 1 ? prev : prev + 1))
+  }, [total])
 
   const goPrev = useCallback(() => {
-    bookRef.current?.pageFlip()?.flipPrev()
+    setCurrentPage(prev => (prev <= 0 ? prev : prev - 1))
   }, [])
 
   const { isPlaying, secondsLeft, toggle, pause } = useAutoPlay(
@@ -42,19 +24,9 @@ export default function Book({ images }) {
     currentPage
   )
 
-  const handleFlip = (e) => {
-    setCurrentPage(e.data)
-  }
-
   const swipeHandlers = useSwipeable({
-    onSwipedLeft: () => {
-      pause()
-      goNext()
-    },
-    onSwipedRight: () => {
-      pause()
-      goPrev()
-    },
+    onSwipedLeft: () => { pause(); goNext() },
+    onSwipedRight: () => { pause(); goPrev() },
     preventScrollOnSwipe: true,
     trackMouse: true,
     trackTouch: true,
@@ -68,10 +40,8 @@ export default function Book({ images }) {
   const handleClick = (e) => {
     if (e.target.closest('.autoplay-btn')) return
     if (e.target.closest('.nav-arrow')) return
-
     const dragDistance = Math.abs(e.clientX - dragStartX.current)
     if (dragDistance > 10) return
-
     pause()
     goNext()
   }
@@ -83,35 +53,13 @@ export default function Book({ images }) {
         onMouseDown={handleMouseDown}
         onClick={handleClick}
       >
-        <HTMLFlipBook
-          ref={bookRef}
-          width={dimensions.width}
-          height={dimensions.height}
-          size="stretch"
-          minWidth={300}
-          maxWidth={1200}
-          minHeight={400}
-          maxHeight={1600}
-          showCover={true}
-          flippingTime={600}
-          usePortrait={true}
-          startPage={0}
-          drawShadow={false}
-          onFlip={handleFlip}
-          className="flipbook"
-          style={{}}
-          startZIndex={0}
-          autoSize={true}
-          clickEventForward={false}
-          useMouseEvents={false}
-          swipeDistance={30}
-          showPageCorners={false}
-          disableFlipByClick={true}
-        >
-          {images.map((image) => (
-            <Page key={image.id} image={image} />
-          ))}
-        </HTMLFlipBook>
+        <img
+          key={images[currentPage].src}
+          src={images[currentPage].src}
+          alt={`Page ${images[currentPage].id}`}
+          className="page-image"
+          draggable={false}
+        />
 
         <AutoPlayControls
           isPlaying={isPlaying}
