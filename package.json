@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "homepage": "https://<GITHUB_USERNAME>.github.io/<REPO_NAME>",
+  "homepage": "https://RegiKanya.github.io/streching-movements",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
